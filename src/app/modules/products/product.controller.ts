@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express'
 import { ProductServices } from './product.services'
+import { ProductModel } from './product.model'
 
 const createProduct = async (req: Request, res: Response) => {
   try {
@@ -13,9 +15,9 @@ const createProduct = async (req: Request, res: Response) => {
     })
   } catch (err: any) {
     res.status(500).json({
-      message: 'Something went wrong',
+      message: err._message,
       success: false,
-      error: err.message,
+      error: err,
       stack: err.stack,
     })
   }
@@ -32,8 +34,9 @@ const getAllProducts = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch products',
-      error: err.message,
+      message: err._message,
+      error: err,
+      stack: err.stack,
     })
   }
 }
@@ -41,16 +44,24 @@ const getSingleProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params
     const result = await ProductServices.getSingleProductFromDB(productId)
-    res.status(200).json({
-      success: true,
-      message: 'Products fetched successfully',
+    if (result) {
+      return res.status(200).json({
+        success: true,
+        message: 'Products fetched successfully',
+        data: result,
+      })
+    }
+    return res.status(404).json({
+      success: false,
+      message: 'Product not found',
       data: result,
     })
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch products',
-      error: err.message,
+      message: err._message,
+      error: err,
+      stack: err.stack,
     })
   }
 }
@@ -59,6 +70,17 @@ const updateProduct = async (req: Request, res: Response) => {
   try {
     const { updatedData } = req.body
     const { productId } = req.params
+
+    const schemaFields = Object.keys(ProductModel.schema.obj)
+
+    const invalidFields = Object.keys(updatedData).filter(
+      key => !schemaFields.includes(key),
+    )
+
+    if (invalidFields.length > 0) {
+      throw new Error(`Invalid fields: ${invalidFields.join(', ')}`)
+    }
+
     const result = await ProductServices.updateProductIntoDB(
       productId,
       updatedData,
@@ -71,8 +93,9 @@ const updateProduct = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Failed to update product',
+      message: err.message,
       error: err,
+      stack: err.stack,
     })
   }
 }
@@ -80,7 +103,7 @@ const updateProduct = async (req: Request, res: Response) => {
 const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params
-    const result = await ProductServices.deleteProductFromDB(productId)
+    await ProductServices.deleteProductFromDB(productId)
     res.status(200).json({
       success: true,
       message: 'Product deleted successfully',
@@ -91,6 +114,7 @@ const deleteProduct = async (req: Request, res: Response) => {
       success: false,
       message: 'Failed to delete product',
       error: err,
+      stack: err.stack,
     })
   }
 }

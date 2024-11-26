@@ -1,7 +1,6 @@
 import mongoose from 'mongoose'
 import { Tproduct } from './product.interface'
 import { ProductModel } from './product.model'
-import { Request, Response } from 'express'
 
 const createProductIntoDB = async (product: Tproduct) => {
   const result = await ProductModel.create(product)
@@ -26,7 +25,7 @@ const updateProductIntoDB = async (
   updatedFields: Partial<Tproduct>,
 ) => {
   const query = { _id: new mongoose.Types.ObjectId(id) }
-  const result = await ProductModel.findByIdAndUpdate(
+  const result = await ProductModel.findOneAndUpdate(
     query,
     {
       $set: {
@@ -34,8 +33,12 @@ const updateProductIntoDB = async (
         updatedAt: new Date(),
       },
     },
-    { new: true },
+    { new: true, runValidators: true },
   )
+  if (!result) {
+    throw new Error('Product not found')
+  }
+
   return result
 }
 

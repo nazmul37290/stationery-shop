@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express'
 import { OrderServices } from './order.services'
 
@@ -12,8 +13,10 @@ const createOrders = async (req: Request, res: Response) => {
     })
   } catch (err: any) {
     res.status(500).json({
+      message: err._message,
       success: false,
-      message: err.message,
+      error: err,
+      stack: err.stack,
     })
   }
 }
@@ -30,6 +33,7 @@ const calculateRevenue = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message,
+      error: err,
       stack: err.stack,
     })
   }
