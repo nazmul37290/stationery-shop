@@ -43,6 +43,10 @@ const updateProductIntoDB = async (
 }
 
 const deleteProductFromDB = async (id: string) => {
+  const product = await ProductModel.findById(id)
+  if (!product) {
+    throw new Error('Product not found')
+  }
   const result = await ProductModel.findByIdAndDelete(id)
   return result
 }

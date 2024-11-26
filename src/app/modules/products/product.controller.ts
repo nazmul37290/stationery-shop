@@ -103,6 +103,7 @@ const updateProduct = async (req: Request, res: Response) => {
 const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params
+
     await ProductServices.deleteProductFromDB(productId)
     res.status(200).json({
       success: true,
@@ -113,7 +114,7 @@ const deleteProduct = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: 'Failed to delete product',
-      error: err,
+      error: err.message,
       stack: err.stack,
     })
   }
