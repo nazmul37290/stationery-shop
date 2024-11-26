@@ -24,5 +24,31 @@ This project is a Node.js-based server application deployed on Vercel. It is con
 6. create order api
 7. generate all order total revenue api
 8. proper validation and error handling
+
+## Running the server locally
+### 1. clone the repo
+   clone the repository to your local device using command prompt
    
+### 2. Install the dependencies
+   open the project file in code editor . then open terminal and run command `npm install`
+   
+### 3. Environmental variables
+   Create a .env file in the root of the project 
+   add the following variable according to your database 
+```NODE_ENV= development
+PORT= your port number
+DATABASE_URL= your mongodb database url
+```
+
+## API endpoints
+| Method | Endpoint | Description |
+|----------|----------|----------|
+| GET    | `/`     | Returns a welcome message     |
+| GET    | `/api/products`     | Returns all products     |
+| GET    | `/api/products/:productId`     | Returns single product     |
+| GET    | `/api/orders/revenue`     | Returns the total revenue of all orders     |
+| POST    | `/api/products`     | creates a product     |
+| POST    | `/api/orders`     | creates a order     |
+| PUT    | `/api/products/:productId`     | Updates a product     |
+| DELETE    | `/api/products/:productId`     | Deletes a product     |
 
