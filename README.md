@@ -14,6 +14,7 @@ This project is a Node.js-based server application deployed on Vercel. It is con
 1. dotenv
 2. cors
 3. eslint
+4. ts-node-dev
 
 ### Features 
 1. creating products api
@@ -39,6 +40,9 @@ This project is a Node.js-based server application deployed on Vercel. It is con
 PORT= your port number
 DATABASE_URL= your mongodb database url
 ```
+### 4. Run the project
+   At last run the command `npm run start:dev` to run locally 
+   
 
 ## API endpoints
 | Method | Endpoint | Description |
