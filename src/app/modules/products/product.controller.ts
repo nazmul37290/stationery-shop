@@ -5,7 +5,7 @@ import { ProductModel } from './product.model'
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const { productData } = req.body
+    const productData = req.body
     const result = await ProductServices.createProductIntoDB(productData)
 
     res.status(200).json({
@@ -69,7 +69,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
 
 const updateProduct = async (req: Request, res: Response) => {
   try {
-    const { updatedData } = req.body
+    const updatedData = req.body
     const { productId } = req.params
 
     const schemaFields = Object.keys(ProductModel.schema.obj)
